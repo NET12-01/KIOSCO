@@ -3,102 +3,1261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiosco - Ventas</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2c3e50">
+    <title>Kiosco - Sistema de Ventas Pro</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+:root {
+    --color-primario: #e67e22;
+    --color-secundario: #2c3e50;
+    --color-exito: #27ae60;
+    --color-peligro: #e74c3c;
+    --color-fondo: #f0f2f5;
+    --color-texto: #333;
+    --color-borde: #dee2e6;
+}
+
+body {
+    background: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+.app {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* ========== HEADER Y NAVEGACIÓN ========== */
+header {
+    background: var(--color-secundario);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #34495e;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+nav a:hover {
+    background: var(--color-primario);
+    transform: translateY(-2px);
+}
+
+nav a.activo {
+    background: var(--color-primario);
+}
+
+/* ========== BUSCADOR RÁPIDO (EXTRA 1) ========== */
+.buscador-rapido {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.buscador-rapido input {
+    flex: 1;
+    padding: 15px 20px;
+    font-size: 1.1em;
+    border: 3px solid var(--color-primario);
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.buscador-rapido input:focus {
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.3);
+}
+
+.buscador-rapido button {
+    padding: 0 20px;
+    background: var(--color-peligro);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.3s;
+}
+
+.buscador-rapido button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+/* ========== VENTA RÁPIDA (EXTRA 2) ========== */
+.venta-rapida {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-rapido {
+    padding: 15px 25px;
+    background: linear-gradient(135deg, var(--color-primario), #d35400);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-rapido:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(230, 126, 34, 0.4);
+}
+
+/* ========== PANEL DE NOTAS (EXTRA 3) ========== */
+.notas-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.btn-notas {
+    padding: 15px 25px;
+    background: var(--color-secundario);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+}
+
+.btn-notas:hover {
+    transform: scale(1.05);
+    background: #34495e;
+}
+
+#notasContent {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 300px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+#notasTexto {
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    border: 2px solid var(--color-borde);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    resize: none;
+    font-size: 1em;
+}
+
+#notasContent button {
+    width: 100%;
+    padding: 10px;
+    background: var(--color-exito);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ========== LAYOUT DE VENTAS ========== */
+.ventas-container {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 20px;
+}
+
+/* ========== GRID DE PRODUCTOS ========== */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    max-height: 70vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.producto-card {
+    background: #f8f9fa;
+    border: 2px solid var(--color-borde);
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.producto-card:hover {
+    background: var(--color-primario);
+    color: white;
+    border-color: #d35400;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+}
+
+.producto-card.sin-stock {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.producto-card.sin-stock:hover {
+    background: #f8f9fa;
+    color: inherit;
+    transform: none;
+    box-shadow: none;
+}
+
+.precio {
+    font-weight: bold;
+    color: var(--color-exito);
+    font-size: 1.3em;
+    margin: 8px 0;
+}
+
+.producto-card:hover .precio {
+    color: white;
+}
+
+.stock {
+    font-size: 0.85em;
+    color: #7f8c8d;
+}
+
+.producto-card:hover .stock {
+    color: #ecf0f1;
+}
+
+/* ========== CARRITO ========== */
+.carrito {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    height: fit-content;
+    position: sticky;
+    top: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.carrito h2 {
+    color: var(--color-secundario);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-primario);
+}
+
+.carrito-items {
+    min-height: 250px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 15px 0;
+}
+
+.carrito-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #ecf0f1;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.item-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.item-cantidad button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: #3498db;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.item-cantidad button:hover {
+    background: #2980b9;
+    transform: scale(1.1);
+}
+
+.item-cantidad button:active {
+    transform: scale(0.9);
+}
+
+.carrito-total {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: right;
+    margin: 20px 0;
+    padding-top: 15px;
+    border-top: 3px solid var(--color-primario);
+    color: var(--color-exito);
+}
+
+/* ========== MÉTODOS DE PAGO (EXTRA 4) ========== */
+.metodos-pago {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.metodos-pago h3 {
+    margin-bottom: 12px;
+    color: var(--color-secundario);
+}
+
+.botones-pago {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+}
+
+.btn-pago {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.btn-pago:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.btn-pago.efectivo {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-pago.tarjeta {
+    background: #3498db;
+    color: white;
+}
+
+.btn-pago.mp {
+    background: #0070ba;
+    color: white;
+}
+
+.btn-pago.dni {
+    background: #6f42c1;
+    color: white;
+}
+
+.btn-pago.modo {
+    background: #0d6efd;
+    color: white;
+}
+
+/* ========== PANEL DE VUELTO ========== */
+#vueltoPanel {
+    margin-top: 20px;
+    padding: 20px;
+    background: #e8f4fd;
+    border-radius: 12px;
+}
+
+#vueltoPanel input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+#vueltoPanel button {
+    width: 100%;
+    padding: 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#resultadoVuelto {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+/* ========== BOTONES PRINCIPALES ========== */
+.btn-pagar, .btn-cancelar {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 10px;
+}
+
+.btn-pagar {
+    background: linear-gradient(135deg, var(--color-exito), #229954);
+    color: white;
+}
+
+.btn-pagar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+}
+
+.btn-cancelar {
+    background: linear-gradient(135deg, var(--color-peligro), #c0392b);
+    color: white;
+}
+
+.btn-cancelar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+/* ========== GESTIÓN DE PRODUCTOS ========== */
+.productos-gestion {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.form-producto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.form-producto input,
+.form-producto select {
+    padding: 12px 15px;
+    border: 2px solid var(--color-borde);
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s;
+}
+
+.form-producto input:focus,
+.form-producto select:focus {
+    border-color: var(--color-primario);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
+}
+
+.btn-agregar {
+    padding: 12px 20px;
+    background: var(--color-exito);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: all 0.3s;
+}
+
+.btn-agregar:hover {
+    background: #229954;
+    transform: translateY(-2px);
+}
+
+.tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.tabla-productos th {
+    background: var(--color-secundario);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.tabla-productos td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.tabla-productos tr:hover {
+    background: #f8f9fa;
+}
+
+.stock-bajo {
+    background: #fff3cd;
+}
+
+.stock-bajo:hover {
+    background: #ffe69c !important;
+}
+
+/* ========== REPORTES ========== */
+.reportes-container {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.reporte-card {
+    background: #f8f9fa;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    border-left: 5px solid var(--color-primario);
+}
+
+.reporte-card h3 {
+    color: var(--color-secundario);
+    margin-bottom: 15px;
+}
+
+.reporte-valor {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--color-exito);
+}
+
+.reporte-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reporte-card li {
+    padding: 10px;
+    border-bottom: 1px solid #ecf0f1;
+    font-size: 1.1em;
+}
+
+.reporte-card li:last-child {
+    border-bottom: none;
+}
+
+/* ========== MODAL PARA ESCÁNER (EXTRA 5) ========== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+}
+
+.modal-content video {
+    width: 100%;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.modal-content button {
+    padding: 12px 20px;
+    background: var(--color-peligro);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-escaneo {
+    padding: 12px 20px;
+    background: #6f42c1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.btn-escaneo:hover {
+    background: #6610f2;
+    transform: translateY(-2px);
+}
+
+/* ========== MODO TABLET ========== */
+@media (max-width: 1024px) {
+    .ventas-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .productos-grid {
+        max-height: 50vh;
+    }
+    
+    .carrito {
+        position: static;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .productos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .botones-pago {
+        grid-template-columns: 1fr;
+    }
+    
+    .venta-rapida {
+        flex-direction: column;
+    }
+    
+    .btn-rapido {
+        width: 100%;
+    }
+    
+    header h1 {
+        font-size: 24px;
+    }
+    
+    nav {
+        flex-direction: column;
+    }
+    
+    nav a {
+        text-align: center;
+    }
+}
+
+/* ========== ANIMACIONES ========== */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.alerta-stock {
+    animation: pulse 1s infinite;
+    background: #fff3cd;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* ========== UTILIDADES ========== */
+.text-center { text-align: center; }
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+.hidden { display: none; }
+</style>
 </head>
 <body>
-    <div class="app">
-        <!-- Header -->
-        <header>
-            <h1>
-                <span>🏪</span>
-                 KIOSCO
-                <span style="font-size:0.5em; margin-left:auto;" onclick="cambiarTema(prompt('Tema: kiosco, noche, navidad'))">🎨</span>
-            </h1>
-            <nav>
-                <a href="index.html" class="activo">💰 Vender</a>
-                <a href="productos.html">📦 Productos</a>
-                <a href="reportes.html">📊 Reportes</a>
-                <a href="#" onclick="cerrarCaja()">🔒 Cerrar Caja</a>
-            </nav>
-        </header>
+<div class="app">
+    <header>
+        <h1>🏪 Kiosco - Sistema de Ventas</h1>
+        <nav>
+            <a href="#" data-section="ventas" class="activo">💰 Ventas</a>
+            <a href="#" data-section="productos">📦 Productos</a>
+            <a href="#" data-section="reportes">📊 Reportes</a>
+        </nav>
+    </header>
 
-        <!-- Buscador rápido -->
-        <div class="buscador-rapido">
-            <input type="text" id="buscador" placeholder="🔍 Buscar producto (Ctrl + K)" autofocus>
-            <button onclick="limpiarBusqueda()" id="btnLimpiar" style="display:none;">✖</button>
-        </div>
-
-        <!-- Botones de venta rápida -->
-        <div class="venta-rapida">
-            <button onclick="venderRapido('Coca')" class="btn-rapido">🥤 Coca</button>
-            <button onclick="venderRapido('Agua')" class="btn-rapido">💧 Agua</button>
-            <button onclick="venderRapido('Marlboro')" class="btn-rapido">🚬 Marlboro</button>
-            <button onclick="venderRapido('Papas')" class="btn-rapido">🥔 Papas</button>
-            <button onclick="venderRapido('Alfajor')" class="btn-rapido">🍫 Alfajor</button>
-        </div>
-
-        <!-- Botón de escáner -->
-        <button onclick="activarEscaneo()" class="btn-escaneo">📷 Escanear código de barras</button>
-
-        <!-- Contenedor principal de ventas -->
-        <div class="ventas-container">
-            <!-- Grid de productos -->
-            <div class="productos-grid" id="productosGrid">
-                <!-- Se carga con JavaScript -->
+    <main>
+        <!-- VENTAS -->
+        <section id="seccion-ventas">
+            <div class="buscador-rapido">
+                <input type="text" id="buscadorInput" placeholder="🔍 Buscar producto... (F2)">
+                <button id="limpiarBusqueda" title="Limpiar">✕</button>
             </div>
 
-            <!-- Carrito -->
-            <div class="carrito">
-                <h2>🛒 Venta Actual</h2>
-                
-                <div class="carrito-items" id="carritoItems">
-                    <!-- Se carga con JS -->
-                </div>
-                
-                <div class="carrito-total">
-                    <span>TOTAL:</span>
-                    <span id="totalVenta">$0</span>
-                </div>
+            <div id="alertaStock" class="alerta-stock hidden"></div>
+            
+            <div class="venta-rapida" id="ventaRapida"></div>
 
-                <!-- Métodos de pago -->
-                <div class="metodos-pago">
-                    <h3>Forma de pago:</h3>
-                    <div class="botones-pago">
-                        <button onclick="seleccionarPago('EFECTIVO')" class="btn-pago efectivo">💰 Efectivo</button>
-                        <button onclick="seleccionarPago('TARJETA')" class="btn-pago tarjeta">💳 Tarjeta</button>
-                        <button onclick="seleccionarPago('MERCADO_PAGO')" class="btn-pago mp">🟡 Mercado Pago</button>
-                        <button onclick="seleccionarPago('CUENTA_DNI')" class="btn-pago dni">📱 Cuenta DNI</button>
-                        <button onclick="seleccionarPago('MODE')" class="btn-pago modo">🔵 MODO</button>
+            <div class="ventas-container">
+                <div>
+                    <div class="productos-grid" id="productosGrid"></div>
+                </div>
+                
+                <div class="carrito">
+                    <h2>🛒 Carrito</h2>
+                    <div class="carrito-items" id="carritoItems">
+                        <p style="text-align:center;color:#999;padding:40px 0">Carrito vacío</p>
+                    </div>
+                    <div class="carrito-total" id="totalCarrito">$0</div>
+
+                    <div class="metodos-pago">
+                        <h3>Método de pago</h3>
+                        <div class="botones-pago">
+                            <button class="btn-pago efectivo" data-metodo="efectivo">💵 Efectivo</button>
+                            <button class="btn-pago tarjeta" data-metodo="tarjeta">💳 Tarjeta</button>
+                            <button class="btn-pago mp" data-metodo="mercadopago">📱 MP</button>
+                            <button class="btn-pago dni" data-metodo="cuenta_dni">🏦 DNI</button>
+                            <button class="btn-pago modo" data-metodo="modo">🔵 MODO</button>
+                        </div>
+                    </div>
+
+                    <div id="vueltoPanel" class="hidden">
+                        <input type="number" id="montoRecibido" placeholder="Monto recibido">
+                        <button id="btnCalcularVuelto">Calcular Vuelto</button>
+                        <div id="resultadoVuelto"></div>
+                    </div>
+
+                    <button class="btn-pagar" id="btnPagar">💰 COBRAR</button>
+                    <button class="btn-cancelar" id="btnCancelar">🗑️ Cancelar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTOS -->
+        <section id="seccion-productos" class="hidden">
+            <div class="productos-gestion">
+                <h2 style="margin-bottom:20px;color:#2c3e50">📦 Gestión de Productos</h2>
+                <button class="btn-escaneo" id="btnAbrirScanner">📷 Escanear Código</button>
+                <div class="form-producto">
+                    <input type="text" id="prodNombre" placeholder="Nombre del producto">
+                    <input type="number" id="prodPrecio" placeholder="Precio ($)" min="0">
+                    <input type="number" id="prodStock" placeholder="Stock inicial" min="0">
+                    <select id="prodCategoria">
+                        <option value="Bebidas">🥤 Bebidas</option>
+                        <option value="Golosinas">🍫 Golosinas</option>
+                        <option value="Snacks">🍿 Snacks</option>
+                        <option value="Cigarrillos">🚬 Cigarrillos</option>
+                        <option value="Otros">📦 Otros</option>
+                    </select>
+                    <input type="text" id="prodCodigo" placeholder="Código barras (opcional)">
+                    <button class="btn-agregar" id="btnGuardarProducto">➕ Agregar Producto</button>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="tabla-productos">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Categoría</th>
+                                <th>Código</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaProductosBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- REPORTES -->
+        <section id="seccion-reportes" class="hidden">
+            <div class="reportes-container">
+                <h2 style="margin-bottom:20px;color:#2c3e50">📊 Reportes del Día</h2>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px">
+                    <div class="reporte-card">
+                        <h3>💰 Ventas de Hoy</h3>
+                        <div class="reporte-valor" id="reporteVentasHoy">$0</div>
+                        <p id="reporteTicketsHoy" style="color:#7f8c8d;margin-top:5px">0 tickets</p>
+                    </div>
+                    <div class="reporte-card">
+                        <h3>📈 Ticket Promedio</h3>
+                        <div class="reporte-valor" id="reporteTicketPromedio">$0</div>
+                    </div>
+                    <div class="reporte-card">
+                        <h3>🏆 Producto Estrella</h3>
+                        <div id="reporteTopProducto" style="font-size:1.3em;font-weight:bold;color:#27ae60;margin-top:10px">-</div>
                     </div>
                 </div>
 
-                <!-- Botones de acción -->
-                <button onclick="pagar()" class="btn-pagar">💵 Pagar (Ctrl+P)</button>
-                <button onclick="cancelarVenta()" class="btn-cancelar">❌ Cancelar (Ctrl+N)</button>
+                <div class="reporte-card">
+                    <h3>🔥 Top 5 Más Vendidos</h3>
+                    <ul id="reporteTopProductos"></ul>
+                </div>
 
-                <!-- Panel de vuelto -->
-                <div id="vueltoPanel" style="display: none;">
-                    <input type="number" id="pagoCliente" placeholder="Monto recibido">
-                    <button onclick="calcularVuelto()">Calcular vuelto</button>
-                    <div id="resultadoVuelto"></div>
+                <div class="reporte-card" style="border-left-color:#e74c3c">
+                    <h3>⚠️ Stock Bajo (&lt;5)</h3>
+                    <ul id="reporteStockBajo"></ul>
+                </div>
+
+                <div class="reporte-card">
+                    <h3>🧾 Últimas Ventas</h3>
+                    <ul id="reporteUltimasVentas" style="max-height:200px;overflow-y:auto"></ul>
                 </div>
             </div>
-        </div>
+        </section>
+    </main>
+</div>
 
-        <!-- Panel de notas -->
-        <div class="notas-panel">
-            <button onclick="toggleNotas()" class="btn-notas">📝 Notas</button>
-            <div id="notasContent" style="display:none;">
-                <textarea id="notasTexto" placeholder="Ej: Pedir Coca, Llamar a proveedor..."></textarea>
-                <button onclick="guardarNotas()">Guardar Notas</button>
-            </div>
+<!-- Panel Notas -->
+<div class="notas-panel">
+    <button class="btn-notas" id="btnToggleNotas">📝 Notas</button>
+    <div id="notasContent" class="hidden">
+        <textarea id="notasTexto" placeholder="Anotaciones del turno..."></textarea>
+        <button id="guardarNotas">Guardar</button>
+    </div>
+</div>
+
+<!-- Modal Scanner -->
+<div id="scannerModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>📷 Escanear Código</h3>
+        <p style="color:#666;margin:10px 0">Ingrese código manualmente o con lector</p>
+        <video id="scannerVideo" autoplay playsinline style="display:none"></video>
+        <input type="text" id="codigoScanner" placeholder="Código de barras..." style="width:100%;padding:12px;border:2px solid #dee2e6;border-radius:8px;font-size:1.1em;margin:10px 0">
+        <div style="display:flex;gap:10px">
+            <button id="btnBuscarCodigo" style="flex:1;padding:12px;background:#27ae60;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold">Buscar</button>
+            <button id="btnCerrarScanner" style="flex:1">Cerrar</button>
         </div>
     </div>
+</div>
 
-    <script src="db.js"></script>
-    <script src="script.js"></script>
+<!-- Toast -->
+<div id="toast" class="hidden" style="position:fixed;top:20px;right:20px;background:#27ae60;color:white;padding:15px 22px;border-radius:12px;z-index:3000;box-shadow:0 6px 20px rgba(0,0,0,0.2);font-weight:500;transition:all 0.3s;transform:translateY(-20px);opacity:0;max-width:90vw"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const STORAGE = { productos:'kiosco_productos_v2', ventas:'kiosco_ventas_v2', notas:'kiosco_notas_v2' };
+
+  const defaultProductos = [
+    {id:1,nombre:'Coca-Cola 500ml',precio:1500,stock:24,categoria:'Bebidas',codigo:'7790895000158'},
+    {id:2,nombre:'Pepsi 500ml',precio:1400,stock:20,categoria:'Bebidas',codigo:'7792798010035'},
+    {id:3,nombre:'Agua Mineral 500ml',precio:1000,stock:35,categoria:'Bebidas',codigo:'7792798010120'},
+    {id:4,nombre:'Speed Energizante',precio:1800,stock:15,categoria:'Bebidas',codigo:'7792798010450'},
+    {id:5,nombre:'Alfajor Jorgito Triple',precio:800,stock:50,categoria:'Golosinas',codigo:'7790060001234'},
+    {id:6,nombre:'Alfajor Guaymallén',precio:400,stock:60,categoria:'Golosinas',codigo:'7790050005678'},
+    {id:7,nombre:'Cofler Block',precio:600,stock:40,categoria:'Golosinas',codigo:'7790030023456'},
+    {id:8,nombre:'Papas Lays 75g',precio:1200,stock:25,categoria:'Snacks',codigo:'7790070034567'},
+    {id:9,nombre:'Doritos 75g',precio:1300,stock:20,categoria:'Snacks',codigo:'7790070037890'},
+    {id:10,nombre:'Cigarrillos Marlboro 20',precio:3500,stock:10,categoria:'Cigarrillos',codigo:'7793000012345'},
+    {id:11,nombre:'Cigarrillos Philip Morris',precio:3300,stock:8,categoria:'Cigarrillos',codigo:'7793000056789'},
+    {id:12,nombre:'Chicle Beldent',precio:300,stock:100,categoria:'Golosinas',codigo:'7790040043210'}
+  ];
+
+  let productos = JSON.parse(localStorage.getItem(STORAGE.productos)) || defaultProductos;
+  let ventas = JSON.parse(localStorage.getItem(STORAGE.ventas)) || [];
+  let carrito = [];
+  let metodoPago = null;
+  let editingId = null;
+
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+  const emojis = {Bebidas:'🥤',Golosinas:'🍫',Snacks:'🍿',Cigarrillos:'🚬',Otros:'📦'};
+  const formatear = n => '$' + n.toLocaleString('es-AR');
+
+  function guardarProductos(){ localStorage.setItem(STORAGE.productos, JSON.stringify(productos)); }
+  function guardarVentas(){ localStorage.setItem(STORAGE.ventas, JSON.stringify(ventas)); }
+
+  function showToast(msg, tipo='exito'){
+    const t = $('#toast');
+    t.textContent = msg;
+    t.style.background = tipo==='error' ? '#e74c3c' : '#27ae60';
+    t.classList.remove('hidden');
+    setTimeout(()=>{ t.style.opacity='1'; t.style.transform='translateY(0)'; },10);
+    setTimeout(()=>{
+      t.style.opacity='0';
+      t.style.transform='translateY(-20px)';
+      setTimeout(()=>t.classList.add('hidden'),300);
+    },2500);
+  }
+
+  // Navegación
+  $$('nav a').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      $$('nav a').forEach(x=>x.classList.remove('activo'));
+      a.classList.add('activo');
+      const sec = a.dataset.section;
+      $('#seccion-ventas').classList.toggle('hidden', sec!=='ventas');
+      $('#seccion-productos').classList.toggle('hidden', sec!=='productos');
+      $('#seccion-reportes').classList.toggle('hidden', sec!=='reportes');
+      if(sec==='reportes') renderReportes();
+      if(sec==='productos') renderTablaProductos();
+    });
+  });
+
+  // Buscador
+  $('#buscadorInput').addEventListener('input', e=> renderProductosGrid(e.target.value));
+  $('#limpiarBusqueda').addEventListener('click', ()=>{ $('#buscadorInput').value=''; renderProductosGrid(''); });
+
+  // Notas
+  $('#btnToggleNotas').addEventListener('click', ()=> $('#notasContent').classList.toggle('hidden'));
+  $('#guardarNotas').addEventListener('click', ()=>{
+    localStorage.setItem(STORAGE.notas, $('#notasTexto').value);
+    showToast('Notas guardadas');
+    $('#notasContent').classList.add('hidden');
+  });
+  $('#notasTexto').value = localStorage.getItem(STORAGE.notas) || '';
+
+  function renderProductosGrid(filtro=''){
+    const grid = $('#productosGrid');
+    const f = filtro.toLowerCase();
+    const lista = productos.filter(p=> p.nombre.toLowerCase().includes(f) || (p.codigo && p.codigo.includes(f)));
+    grid.innerHTML = '';
+    lista.forEach(p=>{
+      const card = document.createElement('div');
+      card.className = 'producto-card' + (p.stock<=0 ? ' sin-stock':'');
+      card.dataset.id = p.id;
+      card.innerHTML = `
+        <div style="font-size:2.2em;margin-bottom:5px">${emojis[p.categoria]||'📦'}</div>
+        <h3 style="font-size:0.95em;min-height:38px">${p.nombre}</h3>
+        <div class="precio">${formatear(p.precio)}</div>
+        <div class="stock">Stock: ${p.stock}</div>
+      `;
+      if(p.stock>0) card.addEventListener('click', ()=> addToCart(p.id));
+      grid.appendChild(card);
+    });
+    checkAlertaStock();
+    renderVentaRapida();
+  }
+
+  function checkAlertaStock(){
+    const bajos = productos.filter(p=>p.stock>0 && p.stock<5);
+    const alerta = $('#alertaStock');
+    if(bajos.length){
+      alerta.classList.remove('hidden');
+      alerta.innerHTML = `⚠️ Stock bajo: ${bajos.map(b=>`${b.nombre} (${b.stock})`).join(', ')}`;
+    } else alerta.classList.add('hidden');
+  }
+
+  function renderVentaRapida(){
+    const cont = $('#ventaRapida');
+    cont.innerHTML='';
+    productos.slice(0,4).forEach(p=>{
+      const btn = document.createElement('button');
+      btn.className='btn-rapido';
+      btn.innerHTML = `${emojis[p.categoria]} ${p.nombre.split(' ')[0]} ${formatear(p.precio)}`;
+      btn.addEventListener('click', ()=> addToCart(p.id));
+      cont.appendChild(btn);
+    });
+  }
+
+  function addToCart(id){
+    const prod = productos.find(p=>p.id===id);
+    if(!prod || prod.stock<=0){ showToast('Sin stock', 'error'); return; }
+    const item = carrito.find(i=>i.id===id);
+    const cantidadEnCarrito = item ? item.cantidad : 0;
+    if(cantidadEnCarrito >= prod.stock){ showToast('No hay más stock', 'error'); return; }
+    if(item) item.cantidad++;
+    else carrito.push({id:prod.id, nombre:prod.nombre, precio:prod.precio, cantidad:1});
+    renderCarrito();
+    showToast(`${prod.nombre} agregado`);
+  }
+
+  function renderCarrito(){
+    const cont = $('#carritoItems');
+    if(carrito.length===0){
+      cont.innerHTML = '<p style="text-align:center;color:#999;padding:40px 0">Carrito vacío</p>';
+    } else {
+      cont.innerHTML = carrito.map(item=>`
+        <div class="carrito-item">
+          <div style="flex:1">
+            <strong>${item.nombre}</strong><br>
+            <small style="color:#7f8c8d">${formatear(item.precio)} c/u</small>
+          </div>
+          <div class="item-cantidad">
+            <button data-id="${item.id}" data-action="restar">−</button>
+            <span style="min-width:24px;text-align:center">${item.cantidad}</span>
+            <button data-id="${item.id}" data-action="sumar">+</button>
+          </div>
+          <div style="width:80px;text-align:right;font-weight:bold">${formatear(item.precio*item.cantidad)}</div>
+        </div>
+      `).join('');
+      cont.querySelectorAll('button').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const id = +b.dataset.id;
+          const act = b.dataset.action;
+          const it = carrito.find(i=>i.id===id);
+          if(act==='sumar'){
+            const prod = productos.find(p=>p.id===id);
+            if(it.cantidad < prod.stock) it.cantidad++; else showToast('Stock máximo','error');
+          } else {
+            it.cantidad--;
+            if(it.cantidad<=0) carrito = carrito.filter(i=>i.id!==id);
+          }
+          renderCarrito();
+        });
+      });
+    }
+    const total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+    $('#totalCarrito').textContent = formatear(total);
+    if(metodoPago==='efectivo') calcularVuelto();
+  }
+
+  $$('.btn-pago').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      $$('.btn-pago').forEach(b=>{b.style.outline='none'; b.style.transform='scale(1)'});
+      btn.style.outline='3px solid white';
+      btn.style.outlineOffset='-3px';
+      btn.style.transform='scale(1.05)';
+      metodoPago = btn.dataset.metodo;
+      const esEfectivo = metodoPago==='efectivo';
+      $('#vueltoPanel').classList.toggle('hidden', !esEfectivo);
+      if(esEfectivo) $('#montoRecibido').focus();
+    });
+  });
+
+  function calcularVuelto(){
+    const total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+    const recibido = parseFloat($('#montoRecibido').value)||0;
+    const vuelto = recibido - total;
+    const res = $('#resultadoVuelto');
+    if(recibido>0){
+      res.innerHTML = vuelto>=0 
+        ? `<div style="color:#27ae60;font-weight:bold">Vuelto: ${formatear(vuelto)}</div>`
+        : `<div style="color:#e74c3c">Faltan: ${formatear(Math.abs(vuelto))}</div>`;
+    } else res.innerHTML='';
+  }
+  $('#montoRecibido').addEventListener('input', calcularVuelto);
+  $('#btnCalcularVuelto').addEventListener('click', calcularVuelto);
+
+  $('#btnPagar').addEventListener('click', ()=>{
+    if(carrito.length===0){ showToast('Carrito vacío','error'); return; }
+    if(!metodoPago){ showToast('Seleccione método de pago','error'); return; }
+    const total = carrito.reduce((s,i)=>s+i.precio*i.cantidad,0);
+    if(metodoPago==='efectivo'){
+      const recibido = parseFloat($('#montoRecibido').value)||0;
+      if(recibido < total){ showToast('Monto insuficiente','error'); return; }
+    }
+    carrito.forEach(item=>{
+      const prod = productos.find(p=>p.id===item.id);
+      prod.stock -= item.cantidad;
+    });
+    const venta = {
+      id: Date.now(),
+      fecha: new Date().toISOString(),
+      items: [...carrito],
+      total,
+      metodo: metodoPago,
+      vuelto: metodoPago==='efectivo' ? (parseFloat($('#montoRecibido').value)-total) : 0
+    };
+    ventas.unshift(venta);
+    guardarProductos();
+    guardarVentas();
+    showToast(`Venta cobrada ${formatear(total)}`);
+    carrito = [];
+    metodoPago = null;
+    $$('.btn-pago').forEach(b=>{b.style.outline='none'; b.style.transform='scale(1)'});
+    $('#vueltoPanel').classList.add('hidden');
+    $('#montoRecibido').value='';
+    $('#resultadoVuelto').innerHTML='';
+    renderCarrito();
+    renderProductosGrid($('#buscadorInput').value);
+    renderTablaProductos();
+  });
+
+  $('#btnCancelar').addEventListener('click', ()=>{
+    if(carrito.length===0) return;
+    if(confirm('¿Cancelar venta?')){
+      carrito=[];
+      renderCarrito();
+      showToast('Venta cancelada','error');
+    }
+  });
+
+  function renderTablaProductos(){
+    const tbody = $('#tablaProductosBody');
+    tbody.innerHTML = productos.map(p=>`
+      <tr class="${p.stock<5?'stock-bajo':''}">
+        <td><strong>${p.nombre}</strong></td>
+        <td style="color:#27ae60;font-weight:bold">${formatear(p.precio)}</td>
+        <td>${p.stock}</td>
+        <td>${emojis[p.categoria]} ${p.categoria}</td>
+        <td style="font-size:0.85em;color:#666">${p.codigo||'-'}</td>
+        <td>
+          <button data-id="${p.id}" data-action="edit" style="padding:6px 10px;background:#3498db;color:white;border:none;border-radius:6px;cursor:pointer;margin-right:5px">Editar</button>
+          <button data-id="${p.id}" data-action="del" style="padding:6px 10px;background:#e74c3c;color:white;border:none;border-radius:6px;cursor:pointer">X</button>
+        </td>
+      </tr>
+    `).join('');
+    tbody.querySelectorAll('button').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const id = +b.dataset.id;
+        const act = b.dataset.action;
+        if(act==='del'){
+          if(confirm('¿Eliminar producto?')){
+            productos = productos.filter(p=>p.id!==id);
+            guardarProductos();
+            renderTablaProductos();
+            renderProductosGrid();
+            showToast('Producto eliminado','error');
+          }
+        } else {
+          const p = productos.find(x=>x.id===id);
+          editingId = id;
+          $('#prodNombre').value = p.nombre;
+          $('#prodPrecio').value = p.precio;
+          $('#prodStock').value = p.stock;
+          $('#prodCategoria').value = p.categoria;
+          $('#prodCodigo').value = p.codigo||'';
+          $('#btnGuardarProducto').textContent = '💾 Actualizar Producto';
+          window.scrollTo({top:0,behavior:'smooth'});
+        }
+      });
+    });
+  }
+
+  $('#btnGuardarProducto').addEventListener('click', ()=>{
+    const nombre = $('#prodNombre').value.trim();
+    const precio = parseInt($('#prodPrecio').value);
+    const stock = parseInt($('#prodStock').value);
+    const categoria = $('#prodCategoria').value;
+    const codigo = $('#prodCodigo').value.trim();
+    if(!nombre || !precio || precio<=0 || isNaN(stock)){
+      showToast('Complete datos válidos','error'); return;
+    }
+    if(editingId){
+      const p = productos.find(x=>x.id===editingId);
+      p.nombre=nombre; p.precio=precio; p.stock=stock; p.categoria=categoria; p.codigo=codigo;
+      showToast('Producto actualizado');
+    } else {
+      const id = productos.length ? Math.max(...productos.map(p=>p.id))+1 : 1;
+      productos.push({id,nombre,precio,stock,categoria,codigo});
+      showToast('Producto agregado');
+    }
+    guardarProductos();
+    editingId=null;
+    $('#prodNombre').value=''; $('#prodPrecio').value=''; $('#prodStock').value=''; $('#prodCodigo').value='';
+    $('#btnGuardarProducto').textContent='➕ Agregar Producto';
+    renderTablaProductos();
+    renderProductosGrid();
+  });
+
+  // Scanner
+  $('#btnAbrirScanner').addEventListener('click', ()=>{ $('#scannerModal').classList.remove('hidden'); $('#codigoScanner').focus(); });
+  $('#btnCerrarScanner').addEventListener('click', ()=> $('#scannerModal').classList.add('hidden'));
+  $('#btnBuscarCodigo').addEventListener('click', buscarPorCodigo);
+  $('#codigoScanner').addEventListener('keydown', e=>{ if(e.key==='Enter') buscarPorCodigo(); });
+  function buscarPorCodigo(){
+    const cod = $('#codigoScanner').value.trim();
+    if(!cod) return;
+    const prod = productos.find(p=> p.codigo===cod || p.nombre.toLowerCase().includes(cod.toLowerCase()));
+    if(prod){
+      $('#scannerModal').classList.add('hidden');
+      $('#codigoScanner').value='';
+      document.querySelector('nav a[data-section="ventas"]').click();
+      addToCart(prod.id);
+    } else {
+      showToast('Producto no encontrado','error');
+    }
+  }
+
+  function renderReportes(){
+    const hoy = new Date().toDateString();
+    const ventasHoy = ventas.filter(v=> new Date(v.fecha).toDateString()===hoy);
+    const totalHoy = ventasHoy.reduce((s,v)=>s+v.total,0);
+    const tickets = ventasHoy.length;
+    const promedio = tickets ? Math.round(totalHoy/tickets) : 0;
+    $('#reporteVentasHoy').textContent = formatear(totalHoy);
+    $('#reporteTicketsHoy').textContent = `${tickets} tickets`;
+    $('#reporteTicketPromedio').textContent = formatear(promedio);
+
+    const mapa = {};
+    ventas.forEach(v=> v.items.forEach(i=>{
+      if(!mapa[i.id]) mapa[i.id]={nombre:i.nombre,cantidad:0,total:0};
+      mapa[i.id].cantidad+=i.cantidad;
+      mapa[i.id].total+=i.cantidad*i.precio;
+    }));
+    const top = Object.values(mapa).sort((a,b)=>b.cantidad-a.cantidad).slice(0,5);
+    $('#reporteTopProductos').innerHTML = top.length ? top.map((p,i)=>`<li><strong>${i+1}. ${p.nombre}</strong> - ${p.cantidad} vendidos (${formatear(p.total)})</li>`).join('') : '<li>Sin ventas aún</li>';
+    $('#reporteTopProducto').textContent = top[0] ? `${top[0].nombre} (${top[0].cantidad})` : '-';
+
+    const bajos = productos.filter(p=>p.stock<5).sort((a,b)=>a.stock-b.stock);
+    $('#reporteStockBajo').innerHTML = bajos.length ? bajos.map(p=>`<li>${emojis[p.categoria]} ${p.nombre} - <strong style="color:#e74c3c">${p.stock} unidades</strong></li>`).join('') : '<li>✓ Todo Ok</li>';
+
+    const ultimas = ventas.slice(0,10);
+    $('#reporteUltimasVentas').innerHTML = ultimas.length ? ultimas.map(v=>{
+      const hora = new Date(v.fecha).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+      return `<li>${hora} - ${formatear(v.total)} - ${v.metodo} (${v.items.reduce((s,i)=>s+i.cantidad,0)} items)</li>`;
+    }).join('') : '<li>Sin ventas</li>';
+  }
+
+  // Init
+  renderProductosGrid();
+  renderCarrito();
+  renderTablaProductos();
+  renderReportes();
+
+  document.addEventListener('keydown', e=>{
+    if(e.key==='F2'){ e.preventDefault(); document.querySelector('nav a[data-section="ventas"]').click(); $('#buscadorInput').focus(); }
+    if(e.key==='Escape' && !$('#scannerModal').classList.contains('hidden')) $('#scannerModal').classList.add('hidden');
+  });
+});
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
 </body>
 </html>
