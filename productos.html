@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosco - Productos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>🏪 KIOSCO - PRODUCTOS</h1>
+            <nav>
+                <a href="index.html">💰 Vender</a>
+                <a href="productos.html" class="activo">📦 Productos</a>
+                <a href="reportes.html">📊 Reportes</a>
+            </nav>
+        </header>
+
+        <div class="productos-gestion">
+            <h2>📦 Gestión de Productos</h2>
+            
+            <!-- Botones de acción -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button onclick="exportarDatos()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:8px;">📁 Exportar Datos</button>
+                <button onclick="importarDatos()" style="padding:10px 20px; background:#9b59b6; color:white; border:none; border-radius:8px;">📂 Importar Datos</button>
+                <button onclick="hacerBackup()" style="padding:10px 20px; background:#f39c12; color:white; border:none; border-radius:8px;">💾 Backup</button>
+                <button onclick="restaurarBackup()" style="padding:10px 20px; background:#e67e22; color:white; border:none; border-radius:8px;">🔄 Restaurar</button>
+            </div>
+            
+            <!-- Formulario para agregar producto -->
+            <div class="form-producto">
+                <input type="text" id="nombreProducto" placeholder="Nombre del producto">
+                <input type="number" id="precioProducto" placeholder="Precio">
+                <input type="number" id="stockProducto" placeholder="Stock inicial">
+                <input type="number" id="stockMinimo" placeholder="Stock mínimo" value="5">
+                <select id="categoriaProducto">
+                    <option value="Bebidas">🥤 Bebidas</option>
+                    <option value="Snacks">🍟 Snacks</option>
+                    <option value="Golosinas">🍬 Golosinas</option>
+                    <option value="Cigarrillos">🚬 Cigarrillos</option>
+                    <option value="Otros">📦 Otros</option>
+                </select>
+                <button onclick="agregarProducto()" class="btn-agregar">➕ Agregar Producto</button>
+            </div>
+
+            <!-- Tabla de productos -->
+            <table class="tabla-productos">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Stock Mínimo</th>
+                        <th>Categoría</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProductosBody">
+                    <!-- Se llena con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

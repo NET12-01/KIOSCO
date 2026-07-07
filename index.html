@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosco - Ventas</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header>
+            <h1>
+                <span>🏪</span>
+                 KIOSCO
+                <span style="font-size:0.5em; margin-left:auto;" onclick="cambiarTema(prompt('Tema: kiosco, noche, navidad'))">🎨</span>
+            </h1>
+            <nav>
+                <a href="index.html" class="activo">💰 Vender</a>
+                <a href="productos.html">📦 Productos</a>
+                <a href="reportes.html">📊 Reportes</a>
+                <a href="#" onclick="cerrarCaja()">🔒 Cerrar Caja</a>
+            </nav>
+        </header>
+
+        <!-- Buscador rápido -->
+        <div class="buscador-rapido">
+            <input type="text" id="buscador" placeholder="🔍 Buscar producto (Ctrl + K)" autofocus>
+            <button onclick="limpiarBusqueda()" id="btnLimpiar" style="display:none;">✖</button>
+        </div>
+
+        <!-- Botones de venta rápida -->
+        <div class="venta-rapida">
+            <button onclick="venderRapido('Coca')" class="btn-rapido">🥤 Coca</button>
+            <button onclick="venderRapido('Agua')" class="btn-rapido">💧 Agua</button>
+            <button onclick="venderRapido('Marlboro')" class="btn-rapido">🚬 Marlboro</button>
+            <button onclick="venderRapido('Papas')" class="btn-rapido">🥔 Papas</button>
+            <button onclick="venderRapido('Alfajor')" class="btn-rapido">🍫 Alfajor</button>
+        </div>
+
+        <!-- Botón de escáner -->
+        <button onclick="activarEscaneo()" class="btn-escaneo">📷 Escanear código de barras</button>
+
+        <!-- Contenedor principal de ventas -->
+        <div class="ventas-container">
+            <!-- Grid de productos -->
+            <div class="productos-grid" id="productosGrid">
+                <!-- Se carga con JavaScript -->
+            </div>
+
+            <!-- Carrito -->
+            <div class="carrito">
+                <h2>🛒 Venta Actual</h2>
+                
+                <div class="carrito-items" id="carritoItems">
+                    <!-- Se carga con JS -->
+                </div>
+                
+                <div class="carrito-total">
+                    <span>TOTAL:</span>
+                    <span id="totalVenta">$0</span>
+                </div>
+
+                <!-- Métodos de pago -->
+                <div class="metodos-pago">
+                    <h3>Forma de pago:</h3>
+                    <div class="botones-pago">
+                        <button onclick="seleccionarPago('EFECTIVO')" class="btn-pago efectivo">💰 Efectivo</button>
+                        <button onclick="seleccionarPago('TARJETA')" class="btn-pago tarjeta">💳 Tarjeta</button>
+                        <button onclick="seleccionarPago('MERCADO_PAGO')" class="btn-pago mp">🟡 Mercado Pago</button>
+                        <button onclick="seleccionarPago('CUENTA_DNI')" class="btn-pago dni">📱 Cuenta DNI</button>
+                        <button onclick="seleccionarPago('MODE')" class="btn-pago modo">🔵 MODO</button>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <button onclick="pagar()" class="btn-pagar">💵 Pagar (Ctrl+P)</button>
+                <button onclick="cancelarVenta()" class="btn-cancelar">❌ Cancelar (Ctrl+N)</button>
+
+                <!-- Panel de vuelto -->
+                <div id="vueltoPanel" style="display: none;">
+                    <input type="number" id="pagoCliente" placeholder="Monto recibido">
+                    <button onclick="calcularVuelto()">Calcular vuelto</button>
+                    <div id="resultadoVuelto"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de notas -->
+        <div class="notas-panel">
+            <button onclick="toggleNotas()" class="btn-notas">📝 Notas</button>
+            <div id="notasContent" style="display:none;">
+                <textarea id="notasTexto" placeholder="Ej: Pedir Coca, Llamar a proveedor..."></textarea>
+                <button onclick="guardarNotas()">Guardar Notas</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

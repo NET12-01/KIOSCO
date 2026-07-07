@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiosco - Reportes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>🏪 KIOSCO - REPORTES</h1>
+            <nav>
+                <a href="index.html">💰 Vender</a>
+                <a href="productos.html">📦 Productos</a>
+                <a href="reportes.html" class="activo">📊 Reportes</a>
+            </nav>
+        </header>
+
+        <div class="reportes-container">
+            <h2>📊 Reportes y Estadísticas</h2>
+            
+            <!-- Ventas del día -->
+            <div class="reporte-card">
+                <h3>💰 Ventas de Hoy</h3>
+                <div class="reporte-valor" id="ventasHoy">$0</div>
+                <div style="margin-top:10px; color:#7f8c8d;" id="cantidadVentasHoy"></div>
+            </div>
+
+            <!-- Productos más vendidos -->
+            <div class="reporte-card">
+                <h3>🔥 Productos más vendidos</h3>
+                <ul id="topProductos">
+                    <!-- Se llena con JS -->
+                </ul>
+            </div>
+
+            <!-- Stock bajo -->
+            <div class="reporte-card">
+                <h3>⚠️ Productos con stock bajo</h3>
+                <ul id="stockBajo">
+                    <!-- Se llena con JS -->
+                </ul>
+            </div>
+
+            <!-- Totales por método de pago -->
+            <div class="reporte-card">
+                <h3>💳 Ventas por método de pago</h3>
+                <ul id="totalesPago">
+                    <!-- Se llena con JS -->
+                </ul>
+            </div>
+
+            <!-- Historial de cierres -->
+            <div class="reporte-card">
+                <h3>📅 Últimos cierres</h3>
+                <ul id="historialCierres">
+                    <!-- Se llena con JS -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        // Cargar historial de cierres
+        function cargarHistorialCierres() {
+            const lista = document.getElementById('historialCierres');
+            if (!lista) return;
+            
+            lista.innerHTML = '';
+            
+            const ultimosCierres = DB.cierresCaja.slice(-5).reverse();
+            
+            if (ultimosCierres.length === 0) {
+                lista.innerHTML = '<li style="color:#95a5a6;">Todavía no hay cierres</li>';
+                return;
+            }
+            
+            ultimosCierres.forEach(cierre => {
+                lista.innerHTML += `
+                    <li style="border-bottom:1px solid #ecf0f1; padding:10px 0;">
+                        <strong>${cierre.fecha_formato}</strong><br>
+                        Ventas: ${cierre.ventas_count} | Total: $${cierre.total_general}
+                    </li>
+                `;
+            });
+        }
+
+        // Extender cargarReportes para incluir historial
+        const originalCargarReportes = cargarReportes;
+        cargarReportes = function() {
+            originalCargarReportes();
+            cargarHistorialCierres();
+        };
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
